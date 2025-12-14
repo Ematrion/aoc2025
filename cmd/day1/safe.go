@@ -21,12 +21,13 @@ type Safe struct {
 func (s *Safe) updateStop() {
 	if s.dial[s.pointer] == s.value {
 		s.countValueStop++
-		s.countValueClick++
+		fmt.Println("Stopped !")
 	}
 }
 
 func (s *Safe) updateClick() {
 	if s.dial[s.pointer] == s.value {
+		fmt.Println("Clicked !")
 		s.countValueClick++
 	}
 }
@@ -75,12 +76,13 @@ func main() {
 	lines, err := utils.ReadFileToLines("inputs/day1.txt")
 	utils.CheckError(err)
 	safeA := NewSafe(50, 0, 100)
-	fmt.Println(safeA.dial)
+	//fmt.Println(safeA.dial)
 	for _, line := range(lines) {
 		r := []rune(line)
 		char := r[0]
 		num, err := strconv.Atoi(string(r[1:]))
 		utils.CheckError(err)
+		fmt.Println(string(char), num)
 		safeA.Rotate(char, num)
 	}
 	fmt.Println(safeA.countValueStop, safeA.countValueClick)

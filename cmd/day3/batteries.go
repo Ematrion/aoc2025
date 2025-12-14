@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"math"
-	"strings"
+	//"strings"
 
-	//"aoc2025/utils"
+	"aoc2025/utils"
 )
 
-func maxPower(bank string) (string, int) {
+/*func maxPower(bank string) (string, int) {
 	fmt.Println("----\nmax power: ", bank)
 	powered := 0
 	var consumed []rune
@@ -31,36 +31,46 @@ func maxPower(bank string) (string, int) {
 		}
 	}
 	return string(consumed), powered
+}*/
+
+func maxPower(bank string) (int, int) {
+	power := 0
+	index := -1
+	for i, battery := range bank {
+		p := int(battery-'0')
+		if p > power {
+			power = p
+			index = i
+			if power == 9 {
+				return power, index
+			}
+		}
+	}
+	return power, index
 }
+
 
 func highestJoltage(bank string, nb int) int {
 	joltage := 0
+	start := 0
 	for i:=nb-1;  i >= 0; i-- {
-		consumed, selected := maxPower(bank[:len(bank)-i])
+		power, index := maxPower(bank[start:len(bank)-i])
 		//fmt.Println(selected, bank)
-		joltage += selected * int(math.Pow(10, float64(i)))
+		joltage += power * int(math.Pow(10, float64(i)))
 		//fmt.Println(selected, joltage)
-		bank, _ = strings.CutPrefix(bank, consumed)
+		start += (index + 1)
 	}
 	return joltage
 }
 
 
 func main() {
-	//banks, err := utils.ReadFileToLines("inputs/day3.txt")
-	//utils.CheckError(err)
-	banks := []string{
-		"987654321111111",
-		"811111111111119",
-		"234234234234278",
-		"818181911112111",
-		//"2274342251334447452432195314423334442326243253434454374212225244643223361286134343534441232331432424",
-		//Selected Power:  98
-	}
+	banks, err := utils.ReadFileToLines("inputs/day3.txt")
+	utils.CheckError(err)
 	joltage := 0
 	for _, bank := range banks {
 		fmt.Println(bank)
-		power := highestJoltage(bank, 2)
+		power := highestJoltage(bank, 12)
 		fmt.Println("Selected Power: ",power)
 		joltage += power
 	}

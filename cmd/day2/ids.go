@@ -8,12 +8,6 @@ import (
 )
 
 
-
-func evenLen(id int) bool {
-	word := strconv.Itoa(id)
-	return len(word) % 2 == 0
-}
-
 func rule1(id int) bool {
 	valid := true
 	word := strconv.Itoa(id)
@@ -58,10 +52,6 @@ func rule2(id int) bool {
 }
 
 func validID(id int) bool {
-	if !evenLen(id) {
-		//fmt.Println(id, "valid")
-		return true
-	}
 	return rule1(id) && rule2(id)
 }
 

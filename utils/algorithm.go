@@ -46,3 +46,22 @@ func BFS[S Searchable[S]](s S) (S, int) {
 	var zero S
 	return zero, -1
 }
+
+func AllSolutions[S Searchable[S]](s S) []S {
+	// BFS based
+	Q := Queue[S]{s}
+	I := Queue[int]{0}
+	var solutions []S
+	for !Q.IsEmpty() {
+		v, _ := Q.Dequeue()
+		i, _ := I.Dequeue()
+		if v.CheckGoal() {
+			solutions = append(solutions, v)
+		}
+		for _, w := range v.Extend() {
+			Q.Enqueue(w)
+			I.Enqueue(i+1)
+		}
+	}
+	return solutions
+}

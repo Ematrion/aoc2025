@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"slices"
 	"math"
 )
 
@@ -65,6 +66,56 @@ func NoOverlappingRanges(ranges []IdRanges) []IdRanges {
 	return bounds
 }
 
+type Pair[T any] [2]T
+
+
+type Graph struct {
+	Vertices []string
+	Edges []Pair[string]
+}
+
+func (g *Graph) AreNeighbor(v, w string) bool {
+	return slices.Contains(g.Edges, Pair[string]{v, w})
+}
+
+/* Vocabulary
+
+	Walk : A sequence (finite or not) of edges which joins a sequence of vertices
+	Trail : A walk in which all edges are distinc
+	Path : A trail in which all vertices are distinct
+*/
+
+func (g *Graph) IsWalk(walk []Pair[string]) bool {
+	for _, edge := range walk {
+		if !g.AreNeighbor(edge[0], edge[1]) {
+			return false
+		}
+	}
+	return true
+}
+
+func (g *Graph) IsTrail (walk []Pair[string]) bool {
+	if !g.IsWalk(walk) {
+		return false
+	}
+	visited := map[Pair[string]]bool{}
+	for _, edge := range walk {
+		visited[edge] = true
+	}
+	return len(visited) == len(walk)
+}
+
+func (g *Graph) IsPath (walk []Pair[string]) bool {
+	if !g.IsTrail(walk) {
+		return false
+	}
+	visited := map[string]bool{}
+	for _, edge := range walk {
+		visited[edge[0]] = true
+		visited[edge[1]] = true
+	}
+	return len(visited) == len(walk) + 1
+}
 
 
 /*
